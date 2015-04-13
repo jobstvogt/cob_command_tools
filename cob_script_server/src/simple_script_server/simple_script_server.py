@@ -163,7 +163,7 @@ class joint_state_listener:
 	def __init__(self, component_name):
 		self.actual_pos = []
 		self.lock = threading.Lock()
-		rospy.Subscriber("/" + component_name + "/joint_trajectory_controller/state", JointTrajectoryControllerState, self.state_cb)
+		rospy.Subscriber("/" + component_name + "/state", JointTrajectoryControllerState, self.state_cb)
 		self.received = False
 
 	# joint states callback
