@@ -62,13 +62,15 @@ class emergency_stop_monitor():
 			rospy.loginfo("Emergency change to "+ str(self.em_status))
 			
 			if msg.emergency_state == 0: # ready
-				self.set_light(self.color_ok)
+				if(self.led_enabled):
+					self.set_light(self.color_ok)
 				if(self.sound_enabled):
 					sss.say(["emergency stop released"])
 				self.diag_status = -1
 				self.motion_status = -1
 			elif msg.emergency_state == 1: # em stop
-				self.set_light(self.color_error)
+				if(self.led_enabled):
+					self.set_light(self.color_error)
 				if msg.scanner_stop and not msg.emergency_button_stop:
 					if(self.sound_enabled):
 						sss.say(["laser emergency stop issued"])
@@ -79,12 +81,14 @@ class emergency_stop_monitor():
 					if(self.sound_enabled):
 						sss.say(["emergency stop issued"])
 			elif msg.emergency_state == 2: # release
-				self.set_light(self.color_warn)
+				if(self.led_enabled):
+					self.set_light(self.color_warn)
 				if(self.sound_enabled):
 					sss.say(["emergency stop acknowledged"])
 			else:
 				rospy.logerr("Unknown emergency status issued: %s",str(msg.emergency_state))
-				self.set_light(self.color_error)
+				if(self.led_enabled):
+					self.set_light(self.color_error)
 				if(self.sound_enabled):
 					sss.say(["Unknown emergency status issued"])
 
@@ -100,10 +104,12 @@ class emergency_stop_monitor():
 			rospy.loginfo("Diagnostics change to "+ str(self.diag_status))
 			
 			if msg.level == 0:	# ok
-				self.set_light(self.color_ok)
+				if(self.led_enabled):
+					self.set_light(self.color_ok)
 				self.motion_status = -1
 			else:								# warning or error
-				self.set_light(self.color_warn)
+				if(self.led_enabled):
+					self.set_light(self.color_warn)
 
 
 	## Motion Monitoring
@@ -127,9 +133,11 @@ class emergency_stop_monitor():
 			rospy.loginfo("Motion change to "+ str(self.motion_status))
 			
 			if moving == 0:	# not moving
-				self.set_light(self.color_ok)
+				if(self.led_enabled):
+					self.set_light(self.color_ok)
 			else:						# moving
-				self.set_light(self.color_warn, True)
+				if(self.led_enabled):
+					self.set_light(self.color_warn, True)
 
 
 	## set light
